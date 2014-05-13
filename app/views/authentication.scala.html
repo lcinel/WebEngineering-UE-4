@@ -1,0 +1,34 @@
+@(form: DynamicForm)
+@main(title = "login.login",
+      pageid = "loginpage",
+      navigation = immutable.Map(routes.Registration.index.url -> "registration.to-registration")) {
+	<section role="main">
+		@if(flash.contains("registration.successful")) {
+		    <p class="registration.successful">
+		        @Messages(flash.get("registration.successful"))
+		    </p>
+		}
+		<section id="login" aria-labelledby="loginheading">
+			@helper.form(routes.Authentication.authenticate) {
+				<fieldset>
+					<legend id="loginheading">@Messages("login.login")</legend>
+					<label for="userName">@Messages("user.name"):</label>
+					<input id="userName" name="userName" type="text" required="required" value="@form("userName").value"/>
+					<label for="password">@Messages("user.pwd"):</label>
+					<input id="password" name="password" type="password" required="required"/>
+					<input id="loginsubmit" type="submit" value="@Messages("login.do-login")"/>
+				</fieldset>
+				@if(form.hasGlobalErrors) {
+				   	<p class="error">
+				       	@Messages(form.globalError.message)
+				   	</p>
+				}
+			}
+		</section>
+		<section id="register" aria-labelledby="registerheading">
+		    <h2 id="registerheading" class="accessibility">@Messages("registration.registration")</h2>
+		    <p>@Messages("registration.not-registered")</p>
+			<a href="@routes.Registration.index">@Messages("registration.to-registration")</a>
+		</section>
+	</section>
+}

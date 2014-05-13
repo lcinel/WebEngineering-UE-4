@@ -1,0 +1,57 @@
+main.big=Business Informatics Group
+main.big-abbrev=BIG
+main.quiz=Quiz
+
+navigation.heading=Navigation
+
+user.first-name=Vorname
+user.last-name=Nachname
+user.birth-date=Geburtsdatum
+user.gender=Geschlecht
+user.gender.male=Männlich
+user.gender.female=Weiblich
+user.name=Benutzername
+user.pwd=Passwort
+user.mandatory-info=Mit * gekennzeichnete Felder sind Pflichtfelder.
+user.user-name-not-unique=Der Benutzername ist leider nicht mehr verfügbar.
+user.created-successfully=Der Benutzer wurde erfolgreich angelegt.
+
+authentication.unsuccessful=Die Authentifizierung ist fehlgeschlagen.
+
+login.login=Login
+login.do-login=Anmelden
+login.logout=Abmelden
+
+registration.personal-data=Persönliche Daten
+registration.login-data=Login Daten
+registration.registration=Registrierung
+registration.not-registered=Nicht registriert?
+registration.register=Registrieren
+registration.to-registration=Zur Registrierung
+
+quiz.start=Quiz starten
+quiz.gameinfo=Spielinformationen
+quiz.result=Endstand
+quiz.intermediateresult=Rundenzwischenstand
+quiz.round.winner={0} gewinnt die Runde {1}!
+quiz.round.tie=Unentschieden in Runde {0}!
+quiz.next=Weiter
+quiz.winner={0} hat das Spiel gewonnen!
+quiz.wonrounds=Gewonnene Runden
+quiz.answer.unknown=Unbekannt
+quiz.answer.correct=Richtig
+quiz.answer.incorrect=Falsch
+
+quiz.playerinfo=Spielerinformationen
+quiz.question=Frage
+quiz.category=Kategorie
+quiz.nextquestion=weiter
+quiz.timer=Timer
+quiz.remainingtime=Verbleibende Zeit
+quiz.previousgame=Letztes Spiel
+quiz.previousgame.never=Nie
+
+quiz.no-current-question=Es gibt gerade keine Frage.
+quiz.no-round-result=Es gibt gerade kein Rundenresultat.
+quiz.no-end-result=Es gibt gerade kein Quizresultat.
+quiz.no-round-ended=Es gibt gerade keine beendete Runde.

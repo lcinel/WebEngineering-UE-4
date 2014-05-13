@@ -1,0 +1,63 @@
+@(form: Form[models.QuizUser])
+@main(title = "registration.register",
+      pageid = "registerpage",
+      navigation = immutable.Map(routes.Authentication.login.url -> "login.login")) {
+	<section role="main" id="register" aria-labelledby="registerheading">
+		<h2 id="registerheading" class="accessibility">@Messages("registration.register")</h2>
+		@helper.form(routes.Registration.create) {
+	    	<fieldset>
+	        	<legend>@Messages("registration.personal-data")</legend>
+	        	<label for="firstName">@Messages("user.first-name"):</label>
+	        	<input id="firstName" name="firstName" type="text" value="@form("firstName").value"/>
+	        	@for(error <- form("firstName").errors) {
+	        		<div id="error_msg_firstName" class="error" role="alert">
+	        			@Messages(error.message)
+	        		</div>
+				}
+	                
+	        	<label for="lastName">@Messages("user.last-name"):</label>
+	        	<input id="lastName" name="lastName" type="text" value="@form("lastName").value"/>
+	        	@for(error <- form("lastName").errors) {
+	        		<div id="error_msg_lastName" class="error" role="alert">
+	        			@Messages(error.message)
+	        		</div>
+				}
+	                
+	        	<label for="birthDate">@Messages("user.birth-date"):</label>
+	        	<input id="birthDate" name="birthDate" type="date" value="@form("birthDate").value"/>
+	        	@for(error <- form("birthDate").errors) {
+	        		<div id="error_msg_birthDate" class="error" role="alert">
+	        			@Messages(error.message)
+	        		</div>
+				}
+	                
+	        	<label for="gender">@Messages("user.gender"):</label>
+	        	<select id="gender" name="gender">
+	        		<option value="male">@Messages("user.gender.male")</option>
+	        		<option value="female">@Messages("user.gender.female")</option>
+	        	</select>
+	       	</fieldset>
+	        <fieldset>
+	        	<legend>@Messages("registration.login-data")</legend>
+	        	<label for="userName">@Messages("user.name")*:</label>
+	        	<input id="userName" name="userName" type="text" required="required" pattern="\w{4,8}"  value="@form("userName").value"/>
+	        	@for(error <- form("userName").errors) {
+	        		<div id="error_msg_username" class="error" role="alert">
+	        			@Messages(error.message)
+	        		</div>
+				}
+	                
+	        	<label for="password">@Messages("user.pwd")*:</label>
+	        	<input id="password" name="password" type="password" required="required" pattern="\w{4,8}"/>
+	        	@for(error <- form("password").errors) {
+				    <div id="error_msg_password" class="error" role="alert">
+	        			@Messages(error.message)
+	        		</div>
+				}
+	        	
+	        	<input id="registersubmit" type="submit" value="@Messages("registration.register")"/>
+	        	<p id="requiredhint">@Messages("user.mandatory-info")</p>
+	        </fieldset>
+	    }
+	</section>
+}

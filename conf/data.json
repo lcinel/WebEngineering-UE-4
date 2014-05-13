@@ -1,0 +1,519 @@
+[
+    { "nameEN": "Web Engineering",
+      "nameDE": "Web Engineering",
+      "questions": [
+        { "id": 1,
+          "textEN": "Which of the following are valid HTTP methods?",
+          "textDE": "Was sind gültige HTTP-Methoden?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "RETRIEVE", "textDE" : "RETRIEVE" },
+            {	"textEN" : "CHECK", "textDE" : "CHECK" },
+            {	"textEN" : "REMOVE", "textDE" : "REMOVE" },
+            {	"textEN" : "CREATE", "textDE" : "CREATE" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "POST", "textDE" : "POST" },
+            {	"textEN" : "HEAD", "textDE" : "HEAD" }
+          ]
+        },
+        { "id": 2,
+          "textEN": "Which principles are part of the \"Web Accessibility Guidelines\"?",
+          "textDE": "Welche Prinzipien gehören zu den \"Web Accessibility Guidelines\"?",
+          "maxTime": 40,
+          "wrongChoices": [
+            {	"textEN" : "Clear", "textDE" : "Clear" },
+            {	"textEN" : "Maintainable", "textDE" : "Maintainable" },
+            {	"textEN" : "Observable", "textDE" : "Observable" },
+            {	"textEN" : "Implementable", "textDE" : "Implementable" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "Perceivable", "textDE" : "Perceivable" },
+            {	"textEN" : "Robust", "textDE" : "Robust" }
+          ]
+        },
+        { "id": 3,
+          "textEN": "Which elements have been newly introduced by the HTML5 specification?",
+          "textDE": "Welche Elemente wurden in HTML5 neu eingeführt?",
+          "maxTime": 35,
+          "wrongChoices": [
+            {	"textEN" : "fieldset", "textDE" : "fieldset" },
+            {	"textEN" : "caption", "textDE" : "caption" },
+            {	"textEN" : "area", "textDE" : "area" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "canvas", "textDE" : "canvas" },
+            {	"textEN" : "header", "textDE" : "header" },
+            {	"textEN" : "meter", "textDE" : "meter" }
+          ]
+        },
+        { "id": 4,
+          "textEN": "Which of the following languages are ECMAScript implementations?",
+          "textDE": "Welche der folgenden Sprachen sind ECMAScript-Implementierungen?",
+          "maxTime": 40,
+          "wrongChoices": [
+            {	"textEN" : "F-Script", "textDE" : "F-Script" },
+            {	"textEN" : "AppleScript", "textDE" : "AppleScript" },
+            {	"textEN" : "VBScript", "textDE" : "VBScript" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "JScript", "textDE" : "JScript" },
+            {	"textEN" : "JavaScript", "textDE" : "JavaScript" },
+            {	"textEN" : "QtScript", "textDE" : "QtScript" }
+          ]
+        },
+        { "id": 5,
+          "textEN": "Which technologies are used in the \"Semantic Web\"?",
+          "textDE": "Welche Technologien kommen im \"Semantic Web\" zum Einsatz?",
+          "maxTime": 45,
+          "wrongChoices": [
+            {	"textEN" : "SQL", "textDE" : "SQL" },
+            {	"textEN" : "CAT", "textDE" : "CAT" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "RDF", "textDE" : "RDF" },
+            {	"textEN" : "OWL", "textDE" : "OWL" },
+            {	"textEN" : "SPARQL", "textDE" : "SPARQL" }
+          ]
+        },
+        { "id": 6,
+          "textEN": "JavaScript...",
+          "textDE": "JavaScript...",
+          "maxTime": 60,
+          "wrongChoices": [
+            {	"textEN" : "has static types.", "textDE" : "hat statische Typen." },
+            {	"textEN" : "always runs on the server side.", "textDE" : "läuft immer server-seitig." },
+            {	"textEN" : "has classes and objects.", "textDE" : "hat Klassen und Objekte." }
+          ],
+          "correctChoices": [
+            {	"textEN" : "is object-oriented.", "textDE" : "ist objekt-orientiert." },
+            {	"textEN" : "is interpreted.", "textDE" : "wird interpretiert." },
+            {	"textEN" : "has dynamic types.", "textDE" : "hat dynamische Typen." }
+          ]
+        },
+        { "id": 7,
+          "textEN": "Which are possible Web Design methods mentioned in the lecture?",
+          "textDE": "Was sind mögliche Web Design-Methoden?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "Regressive shrinkage", "textDE" : "Regressive shrinkage" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Graceful degradation", "textDE" : "Graceful degradation" },
+            {	"textEN" : "Progressive enhancement", "textDE" : "Progressive enhancement" },
+            {	"textEN" : "Responsive design", "textDE" : "Responsive design" }
+          ]
+        }
+      ]
+    },
+    { "nameEN": "TU Vienna",
+      "nameDE": "TU Wien",
+      "questions": [
+        { "id": 8,
+          "textEN": "Which faculties are part of the TU Vienna?",
+          "textDE": "Welche Fakultäten gibt es an der TU Wien?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "Medicine", "textDE" : "Medizin" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "Technical Chemistry", "textDE" : "Technische Chemie" },
+            {	"textEN" : "Physics", "textDE" : "Physik" },
+            {	"textEN" : "Informatics", "textDE" : "Informatik" }
+          ]
+        },
+        { "id": 9,
+          "textEN": "Which institutes are part of the Faculty of Informatics at the TU Vienna?",
+          "textDE": "Welche Institute gibt es an der Fakultät für Informatik?",
+          "maxTime": 40,
+          "wrongChoices": [
+            {	"textEN" : "Traffic Technology", "textDE" : "Verkehrswissenschaften" },
+            {	"textEN" : "Computer Technology", "textDE" : "Computertechnik" },
+            {	"textEN" : "Micro Electronics", "textDE" : "Mikroelektronik" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "Design and Assessment of Technology", "textDE" : "Gestaltuns- und Wirkungsforschung" },
+            {	"textEN" : "Software Technology and Interactive Systems", "textDE" : "Softwaretechnik und Interaktive Systeme" }
+          ]
+        },
+        { "id": 10,
+          "textEN": "Who is the headmaster of the TU Vienna?",
+          "textDE": "Wer ist RektorIn der TU Wien?",
+          "maxTime": 40,
+          "wrongChoices": [
+            {	"textEN" : "Dr. Adalbert Prechtl", "textDE" : "Dr. Adalbert Prechtl" },
+            {	"textEN" : "Mag. Anna Steiger", "textDE" : "Mag. Anna Steiger" },
+            {	"textEN" : "Dr. Peter Skalicky", "textDE" : "Dr. Peter Skalicky" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "Dr. Sabine Seidler", "textDE" : "Dr. Sabine Seidler" }
+          ]
+        },
+        { "id": 11,
+          "textEN": "When was the TU Vienna founded?",
+          "textDE": "Wann wurde die TU Wien gegründet?",
+          "maxTime": 20,
+          "wrongChoices": [
+            {	"textEN" : "1915", "textDE" : "1915" },
+            {	"textEN" : "1955", "textDE" : "1955" },
+            {	"textEN" : "1845", "textDE" : "1845" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "1815", "textDE" : "1815" }
+          ]
+        },
+        { "id": 12,
+          "textEN": "Among the Top 3 study programms in terms of applied students are...",
+          "textDE": "Unter den Top 3 belegten Studien an der TU Wien befinden sich...",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "Civil Engineering", "textDE" : "Bauingenieurwesen" },
+            {	"textEN" : "Mechanical Engineering", "textDE" : "Maschinenbau" },
+            {	"textEN" : "Business Informatics", "textDE" : "Wirtschaftsinformatik" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Informatics", "textDE" : "Informatik" },
+            {	"textEN" : "Architecture", "textDE" : "Architektur" },
+            {	"textEN" : "Electrical Engineering", "textDE" : "Elektrotechnik" }
+          ]
+        },
+        { "id": 13,
+          "textEN": "The TU Vienna is located at which places?",
+          "textDE": "Welche Standorte hat die TU Wien?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "Freyung", "textDE" : "Freyung" },
+            {	"textEN" : "Universitätsring", "textDE" : "Universitätsring" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Freihausgründe", "textDE" : "Freihausgründe" },
+            {	"textEN" : "Favoritenstraße", "textDE" : "Favoritenstraße" }
+          ]
+        },
+        { "id": 14,
+          "textEN": "How many enrolled students are at the TU Vienna in the summer term 2014?",
+          "textDE": "Wieviele fortgemeldete Studierende hat die TU Wien im SS14?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "15,000 - 20,000", "textDE" : "15.000 - 20.000" },
+            {	"textEN" : "10,000 - 15,000", "textDE" : "10.000 - 15.000" },
+            {	"textEN" : "25,000 - 30,000", "textDE" : "25.000 - 30.000" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "20,000 - 25,000", "textDE" : "20.000 - 25.000" }
+          ]
+        }
+      ]
+    },
+    { "nameEN": "Semistructured Data",
+      "nameDE": "Semistrukturierte Daten",
+      "questions": [
+        { "id": 15,
+          "textEN": "XML is...",
+          "textDE": "XML ist...",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "a programming language", "textDE" : "eine Programmiersprache" },
+            {	"textEN" : "a network protocol", "textDE" : "ein Netzwerkprotokoll" },
+            {	"textEN" : "a database", "textDE" : "eine Datenbank" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "a markup language", "textDE" : "eine Auszeichnungssprache" }
+          ]
+        },
+        { "id": 16,
+          "textEN": "Which languages are used to query XML?",
+          "textDE": "Welche Sprachen werden zum Abfragen von XML verwendet?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "JAQL", "textDE" : "JAQL" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "XPath", "textDE" : "XPath" },
+            {	"textEN" : "XQuery", "textDE" : "XQuery" },
+            {	"textEN" : "XSLT", "textDE" : "XSLT" }
+          ]
+        },
+        { "id": 17,
+          "textEN": "Which languages are used to query JSON?",
+          "textDE": "Welche Sprachen werden zum Abfragen von JSON verwendet?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "XSLT", "textDE" : "XSLT" },
+            {	"textEN" : "JSON Find", "textDE" : "JSON Find" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "JSON Path", "textDE" : "JSON Path" },
+            {	"textEN" : "JSON Query", "textDE" : "JSON Query" }
+          ]
+        },
+        { "id": 18,
+          "textEN": "Which languages can be used to define semistructured data?",
+          "textDE": "Welche Sprachen eignen sich um semistrukturierte Daten zu definieren?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "Schema", "textDE" : "Schema" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "XML", "textDE" : "XML" },
+            {	"textEN" : "JSON", "textDE" : "JSON" },
+            {	"textEN" : "YAML", "textDE" : "YAML" }
+          ]
+        },
+        { "id": 19,
+          "textEN": "Which languages can be used to define a schema in XML?",
+          "textDE": "Welche Sprachen eignen sich zur Schemadefinition in XML?",
+          "maxTime": 20,
+          "wrongChoices": [
+            {	"textEN" : "XML Definition", "textDE" : "XML Definition" },
+            {	"textEN" : "DTD Schema", "textDE" : "DTD Schema" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "XML Schema", "textDE" : "XML Schema" },
+            {	"textEN" : "Document Type Definition", "textDE" : "Document Type Definition" }
+          ]
+        },
+        { "id": 20,
+          "textEN": "Which of the following are well-known parsers for XML?",
+          "textDE": "Welche bekannten Parser gibt es für XML?",
+          "maxTime": 20,
+          "wrongChoices": [
+            {	"textEN" : "MGF", "textDE" : "MGF" },
+            {	"textEN" : "XMP", "textDE" : "XMP" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "SAX", "textDE" : "SAX" },
+            {	"textEN" : "DOM", "textDE" : "DOM" }
+          ]
+        },
+        { "id": 21,
+          "textEN": "Which attribute types are possible in DTDs?",
+          "textDE": "Welche Attributtypen gibt es bei DTDs?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "BDATA", "textDE" : "BDATA" },
+            {	"textEN" : "REFERENCE", "textDE" : "REFERENCE" },
+            {	"textEN" : "ELEMENT", "textDE" : "ELEMENT" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "CDATA", "textDE" : "CDATA" },
+            {	"textEN" : "ENTITY", "textDE" : "ENTITY" },
+            {	"textEN" : "ID", "textDE" : "ID" }
+          ]
+        }
+      ]
+    },
+    { "nameEN": "Internet Technologies",
+      "nameDE": "Internet Technologien",
+      "questions": [
+        { "id": 22,
+          "textEN": "Which versions of the Internet Protocol are in use today?",
+          "textDE": "Welche Versionen des Internet Protokolls sind heutzutage im Einsatz?",
+          "maxTime": 15,
+          "wrongChoices": [
+            {	"textEN" : "IPv9", "textDE" : "IPv9" },
+            {	"textEN" : "IPv0", "textDE" : "IPv0" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "IPv4", "textDE" : "IPv4" },
+            {	"textEN" : "IPv6", "textDE" : "IPv6" }
+          ]
+        },
+        { "id": 23,
+          "textEN": "Which IPv4 adress is part of the private range that is not routed in the Internet?",
+          "textDE": "Welche IPv4-Adressen gehören dem privaten Netzbereich an und werden im Internet nicht geroutet?",
+          "maxTime": 40,
+          "wrongChoices": [
+            {	"textEN" : "192.166.2.1", "textDE" : "192.166.2.1" },
+            {	"textEN" : "172.33.250.250", "textDE" : "172.33.250.250" },
+            {	"textEN" : "11.0.0.1", "textDE" : "11.0.0.1" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "192.168.252.3", "textDE" : "192.168.252.3" },
+            {	"textEN" : "10.0.0.1", "textDE" : "10.0.0.1" },
+            {	"textEN" : "172.31.255.1", "textDE" : "172.31.255.1" }
+          ]
+        },
+        { "id": 24,
+          "textEN": "Which protocols are part of the Transport layer?",
+          "textDE": "Welche Protokolle befinden sich in der Transportschicht?",
+          "maxTime": 20,
+          "wrongChoices": [
+            {	"textEN" : "IP", "textDE" : "IP" },
+            {	"textEN" : "PTPP", "textDE" : "PTPP" },
+            {	"textEN" : "DHCP", "textDE" : "DHCP" },
+            {	"textEN" : "NTP", "textDE" : "NTP" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "TCP", "textDE" : "TCP" },
+            {	"textEN" : "UDP", "textDE" : "UDP" }
+          ]
+        },
+        { "id": 25,
+          "textEN": "Which protocols are part of the Application layer?",
+          "textDE": "Welche Protokolle befinden sich in der Applikationsschicht?",
+          "maxTime": 35,
+          "wrongChoices": [
+            {	"textEN" : "PTPP", "textDE" : "PTPP" },
+            {	"textEN" : "UDP", "textDE" : "UDP" },
+            {	"textEN" : "IP", "textDE" : "IP" }
+          ],
+          "correctChoices": [ 
+            {	"textEN" : "DNS", "textDE" : "DNS" },
+            {	"textEN" : "FTP", "textDE" : "FTP" },
+            {	"textEN" : "SOCKS", "textDE" : "SOCKS" },
+            {	"textEN" : "HTTP", "textDE" : "HTTP" },
+            {	"textEN" : "SSH", "textDE" : "SSH" }
+          ]
+        },
+        { "id": 26,
+          "textEN": "Which protocols are part of the Internet layer?",
+          "textDE": "Welche Protokolle befinden sich in der Internetschicht?",
+          "maxTime": 20,
+          "wrongChoices": [
+            {	"textEN" : "UDP", "textDE" : "UDP" },
+            {	"textEN" : "TCP", "textDE" : "TCP" },
+            {	"textEN" : "FTP", "textDE" : "FTP" },
+            {	"textEN" : "HTTP", "textDE" : "HTTP" },
+            {	"textEN" : "SSH", "textDE" : "SSH" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "IP", "textDE" : "IP" }
+          ]
+        },
+        { "id": 27,
+          "textEN": "Which protocols are part of the Link layer?",
+          "textDE": "Welche Protokolle befinden sich in der Netzzugangsschicht?",
+          "maxTime": 20,
+          "wrongChoices": [
+            {	"textEN" : "SOCKS", "textDE" : "SOCKS" },
+            {	"textEN" : "POP", "textDE" : "POP" },
+            {	"textEN" : "FTP", "textDE" : "FTP" },
+            {	"textEN" : "IP", "textDE" : "IP" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Ethernet", "textDE" : "Ethernet" },
+            {	"textEN" : "Token Ring", "textDE" : "Token Ring" }
+          ]
+        },
+        { "id": 28,
+          "textEN": "Which layers are part of the TCP/IP reference model?",
+          "textDE": "Welche Schichten gibt es im TCP/IP-Referenzmodell?",
+          "maxTime": 35,
+          "wrongChoices": [
+            {	"textEN" : "Session", "textDE" : "Sitzung" },
+            {	"textEN" : "Physical", "textDE" : "Bitübertragung" },
+            {	"textEN" : "Presentation", "textDE" : "Darstellung" },
+            {	"textEN" : "Data link", "textDE" : "Vermittlung" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Application", "textDE" : "Anwendungen" },
+            {	"textEN" : "Internet", "textDE" : "Internet" },
+            {	"textEN" : "Link", "textDE" : "Netzzugang" },
+            {	"textEN" : "Transport", "textDE" : "Transport" }
+          ]
+        }
+      ]
+    },
+    { "nameEN": "Internet and Internet usage",
+      "nameDE": "Internet und Internetverwendung",
+      "questions": [
+        { "id": 29,
+          "textEN": "Among the Top 5 countries whith the most internet users are...",
+          "textDE": "Unter den Top 5 der Länder, mit den meisten Internet-Usern befinden sich...",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "United Kingdom", "textDE" : "United Kingdom" },
+            {	"textEN" : "Russia", "textDE" : "Russland" },
+            {	"textEN" : "Germany", "textDE" : "Deutschland" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "United States", "textDE" : "United States" },
+            {	"textEN" : "India", "textDE" : "Indien" },
+            {	"textEN" : "Japan", "textDE" : "Japan" }
+          ]
+        },
+        { "id": 30,
+          "textEN": "The most internet users in absolute numbers are live in...",
+          "textDE": "Die meisten Internet-User in absoluten Zahlen gibt es in...",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "Europe", "textDE" : "Europa" },
+            {	"textEN" : "North America", "textDE" : "Nordamerika" },
+            {	"textEN" : "Africa", "textDE" : "Afrika" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Asia", "textDE" : "Asien" }
+          ]
+        },
+        { "id": 31,
+          "textEN": "The most used Social Network is...",
+          "textDE": "Welches ist das meist genutzte Social Network?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "Google+", "textDE" : "Google+" },
+            {	"textEN" : "Twitter", "textDE" : "Twitter" },
+            {	"textEN" : "Instagramm", "textDE" : "Instagramm" },
+            {	"textEN" : "Pinterest", "textDE" : "Pinterest" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Facebook", "textDE" : "Facebook" }
+          ]
+        },
+        { "id": 32,
+          "textEN": "How many unique visitors does Youtube have approximately per month?",
+          "textDE": "Wieviele eindeutige Benutzer hat Youtube ungefähr pro Monat?",
+          "maxTime": 30,
+          "wrongChoices": [
+            {	"textEN" : "Over a million", "textDE" : "Über eine Million" },
+            {	"textEN" : "Over ten millions", "textDE" : "Über zehn Millionen" },
+            {	"textEN" : "Over a hundred millions", "textDE" : "Über hundert Millionen" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Over a billion", "textDE" : "Über eine Milliarde" }
+          ]
+        },
+        { "id": 33,
+          "textEN": "Which companies belong to Facebook?",
+          "textDE": "Welche Unternehmen gehören zu Facebook?",
+          "maxTime": 20,
+          "wrongChoices": [
+            {	"textEN" : "Pinterest", "textDE" : "Pinterest" },
+            {	"textEN" : "Twitter", "textDE" : "Twitter" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Instagramm", "textDE" : "Instagramm" },
+            {	"textEN" : "WhatsApp", "textDE" : "WhatsApp" }
+          ]
+        },
+        { "id": 34,
+          "textEN": "Which of the following people founded Google?",
+          "textDE": "Wer der folgenden Personen hat Google (mit-)begründet?",
+          "maxTime": 40,
+          "wrongChoices": [
+            {	"textEN" : "Eric Schmidt", "textDE" : "Eric Schmidt" },
+            {	"textEN" : "Dustin Moskovitz", "textDE" : "Dustin Moskovitz" },
+            {	"textEN" : "Andrew McCollum", "textDE" : "Andrew McCollum" },
+            {	"textEN" : "Mark Zuckerberg", "textDE" : "Mark Zuckerberg" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "Larry Page", "textDE" : "Larry Page" },
+            {	"textEN" : "Sergey Brin", "textDE" : "Sergey Brin" }
+          ]
+        },
+        { "id": 35,
+          "textEN": "How many homes in Austria have broadband internet access?",
+          "textDE": "Wieviele Haushalte in Österreich haben Breitband-Internetzugang?",
+          "maxTime": 20,
+          "wrongChoices": [
+            {	"textEN" : "50\% - 75\%", "textDE" : "50\% - 75\%" },
+            {	"textEN" : "0\% - 50\%", "textDE" : "0\% - 50\%" },
+            {	"textEN" : "85\%+", "textDE" : "85\%+" }
+          ],
+          "correctChoices": [
+            {	"textEN" : "75\% - 85\%", "textDE" : "75\% - 85\%" }
+          ]
+        }
+      ]
+    }
+]

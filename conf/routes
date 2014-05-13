@@ -1,0 +1,22 @@
+# Routes
+# ~~~~~~
+
+GET     /               controllers.Application.index()
+GET     /login          controllers.Authentication.login()
+GET     /logout         controllers.Authentication.logout()
+GET     /authenticate   controllers.Authentication.login()
+POST    /authenticate   controllers.Authentication.authenticate()
+GET     /registration   controllers.Registration.index()
+POST    /registration   controllers.Registration.create()
+
+GET     /quiz           controllers.Quiz.index()
+POST    /quiz           controllers.Quiz.newGame()
+
+GET     /quiz/question  controllers.Quiz.question()
+GET     /quiz/round     controllers.Quiz.roundResult()
+POST    /quiz/round     controllers.Quiz.newRound()
+
+GET     /quiz/result    controllers.Quiz.endResult()
+POST    /quiz/answer    controllers.Quiz.addAnswer()
+
+GET     /assets/*file   controllers.Assets.at(path="/public", file)

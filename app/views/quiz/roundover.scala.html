@@ -1,0 +1,70 @@
+@(game: QuizGame)
+@player1 = @{ game.getPlayers().get(0) }
+@player2 = @{ game.getPlayers().get(1) }
+@questions = @{ game.getCurrentRound().getQuestions() }
+@maxIndexOfQuestion = @{ questions.size() - 1 }
+@roundWinnerMessage = @{
+    game.getCurrentRound().getRoundWinner() match {
+        case null => Messages("quiz.round.tie", game.getCurrentRoundCount())
+        case winner: QuizUser => Messages("quiz.round.winner", winner.getName(), game.getCurrentRoundCount())
+    }
+}
+@correctOrIncorrect(questionIndex: Int, player: QuizUser) = @{
+    game.getCurrentRound().getAnswer(questionIndex, player) match {
+        case null => "unknown"
+        case answer if answer.isCorrect() => "correct"
+        case answer if !answer.isCorrect() => "incorrect"
+    }
+}
+@correctOrIncorrectMessage(questionIndex: Int, player: QuizUser) = @{
+    game.getCurrentRound().getAnswer(questionIndex, player) match {
+        case null => Messages("quiz.answer.unknown")
+        case answer if answer.isCorrect() => Messages("quiz.answer.correct")
+        case answer if !answer.isCorrect() => Messages("quiz.answer.incorrect")
+    }
+}
+@main("main.quiz",
+      pageid = "winnerpage",
+      navigation = immutable.Map(routes.Authentication.logout.url -> "login.logout")) {
+	<section role="main">
+		<!-- winner message -->
+        <section id="roundwinner" aria-labelledby="roundwinnerheading">
+            <h2 id="roundwinnerheading" class="accessibility">@Messages("quiz.intermediateresult")</h2>
+            <p class="roundwinnermessage">@roundWinnerMessage</p>
+        </section>
+    
+        <!-- round info -->    
+        <section id="roundinfo" aria-labelledby="roundinfoheading">
+            <h2 id="roundinfoheading" class="accessibility">@Messages("quiz.gameinfo")</h2>
+            <div id="player1info" class="playerinfo">
+            	<span id="player1name" class="playername">@player1.getName()</span>
+                <ul class="playerroundsummary">
+                @for(i <- 0 to maxIndexOfQuestion) {
+                    <li>
+                        <span class="accessibility">Frage @i:</span><span id="player1answer@i" class="@correctOrIncorrect(i, player1)">
+                            @correctOrIncorrectMessage(i, player1)
+                        </span>
+                    </li>
+                }
+                </ul>
+                <p id="player1roundcounter" class="playerroundcounter">@Messages("quiz.wonrounds"): <span id="player1wonrounds" class="playerwonrounds">@game.getWonRounds(player1)</span></p>
+            </div>
+            <div id="player2info" class="playerinfo">
+            	<span id="player2name" class="playername">@player2.getName()</span>
+                <ul class="playerroundsummary">
+                @for(i <- 0 to maxIndexOfQuestion) {
+                    <li>
+                        <span class="accessibility">Frage @i:</span><span id="player2answer@i" class="@correctOrIncorrect(i, player2)">
+                            @correctOrIncorrectMessage(i, player2)
+                        </span>
+                    </li>
+                }
+                </ul>
+                <p id="player2roundcounter" class="playerroundcounter">@Messages("quiz.wonrounds"): <span id="player2wonrounds" class="playerwonrounds">@game.getWonRounds(player2)</span></p>
+            </div>
+            @helper.form(routes.Quiz.newRound) {
+                <input id="next" type="submit" value="@Messages("quiz.next")"/>
+            }
+        </section>
+    </section>
+}

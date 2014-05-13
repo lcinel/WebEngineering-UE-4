@@ -1,0 +1,9 @@
+@main("main.quiz",
+      pageid = "welcomepage",
+      navigation = immutable.Map(routes.Authentication.logout.url -> "login.logout")) {
+	<section role="main" id="quiz">
+		@helper.form(routes.Quiz.newGame) {
+			<input id="startgame" type="submit" value="@Messages("quiz.start")"/>
+		}
+    </section>
+}

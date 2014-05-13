@@ -1,0 +1,57 @@
+main.big=Business Informatics Group
+main.big-abbrev=BIG
+main.quiz=Quiz
+
+navigation.heading=Navigation
+
+user.first-name=First name
+user.last-name=Last name
+user.birth-date=Birth date
+user.gender=Gender
+user.gender.male=Male
+user.gender.female=Female
+user.name=User name
+user.pwd=Password
+user.mandatory-info=Fields marked with * are mandatory.
+user.user-name-not-unique=The user name is not available.
+user.created-successfully=The user has been created successfully.
+
+authentication.unsuccessful=Login was unsuccessful.
+
+login.login=Login
+login.do-login=Login
+login.logout=Logout
+
+registration.personal-data=Personal Data
+registration.login-data=Login Data
+registration.registration=Registration
+registration.not-registered=Not registered?
+registration.register=Register
+registration.to-registration=Register
+
+quiz.start=Start quiz
+quiz.gameinfo=Game information
+quiz.intermediateresult=Intermediate result
+quiz.round.winner=The winner of round {1} is {0}!
+quiz.round.tie=Round {0} is a tie!
+quiz.next=Next
+quiz.result=Game result
+quiz.winner=The winner is {0}!
+quiz.wonrounds=Rounds won
+quiz.answer.unknown=Unknown
+quiz.answer.correct=Correct
+quiz.answer.incorrect=Incorrect
+
+quiz.playerinfo=Player Info
+quiz.question=Question
+quiz.category=Category
+quiz.nextquestion=next
+quiz.timer=Timer
+quiz.remainingtime=Remaining Time
+quiz.previousgame=Previous Game
+quiz.previousgame.never=Never
+
+quiz.no-current-question=Currently, there is no question.
+quiz.no-round-result=Currently, there is no round result.
+quiz.no-end-result=Currently, there is no quiz result.
+quiz.no-round-ended=Currently, there is no ended round.
