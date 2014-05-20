@@ -160,6 +160,8 @@ public class Quiz extends Controller {
 	public static Result endResult() {
 		QuizGame game = cachedGame();
 		if (game != null && isGameOver(game)) {
+			
+			// TODO: Manage SOAP Request here ...
 			return ok(quizover.render(game));
 		} else {
 			return badRequest(Messages.get("quiz.no-end-result"));
@@ -202,5 +204,4 @@ public class Quiz extends Controller {
 	private static Application application() {
 		return Play.application().getWrappedApplication();
 	}
-
 }
