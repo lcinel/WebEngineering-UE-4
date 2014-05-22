@@ -11,6 +11,7 @@ import models.Choice;
 import models.Question;
 import models.QuizDAO;
 import play.Logger;
+import play.db.jpa.Transactional;
 import at.ac.tuwien.big.we14.lab4.dbpedia.api.DBPediaService;
 import at.ac.tuwien.big.we14.lab4.dbpedia.api.SelectQueryBuilder;
 import at.ac.tuwien.big.we14.lab4.dbpedia.vocabulary.DBPedia;
@@ -31,14 +32,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  */
 public class DBPediaDataInserter {
 
-	/**
-	 * Checks if {@link DBPediaService} is available, if it is, creates
-	 * {@link Resource}s and {@link SelectQueryBuilder}s to fetch data from
-	 * {@link DBPedia} into {@link Model}s. It creates then corresponding
-	 * {@link Category}, {@link Question}s and {@link Choice}s and persists them
-	 * in to DB.
-	 */
-	@play.db.jpa.Transactional
+	@Transactional
 	public static void insertData() {
 
 		if (!isAvailable()) {
@@ -46,144 +40,174 @@ public class DBPediaDataInserter {
 			return;
 		}
 
-		Category category = new Category();
-		
-		Resource europe = getResourceFor("Europe");
-		Resource austria = getResourceFor("Austria");
-		
-		category.setNameEN(getTextFor(europe).getEnText() + " / " + getTextFor(austria).getEnText());
-		category.setNameDE(getTextFor(europe).getDeText() + " / " + getTextFor(austria).getDeText());
-		
-		List<Question> questions = createQuestionList();
+		Category category = buildQueries();
 
-		for(Question q : questions)
-			q.setCategory(category);
-		
-		category.setQuestions(questions);
-		
+		if (category == null) {
+			Logger.debug("Category is null");
+			return;
+		}
+
 		QuizDAO.INSTANCE.persist(category);
-		
-		Logger.info("Data from DBPedia inserted: ");
-	}
-
-	private static List<Question> createQuestionList() {
-
-		List<Question> questions = new ArrayList<Question>();
-
-		questions.add(questionOne());
-		questions.add(questionTwo());
-		questions.add(questionThree());
-		questions.add(questionFour());
-		questions.add(questionFive());
-		
-		return questions;
+		Logger.info("Data from DBPedia created!");
 	}
 
 	/**
-	 * Creates a {@link Question}, sets maximum time, English and German texts
-	 * of it and returns it. Note that this method does not assign choices of
-	 * the {@link Question}!
+	 * Build 5 queries, which creates {@link Choice}s and returns
+	 * {@link Question}. Returned questions packed in a list and creates
+	 * {@link Category} related to questions.
+	 * 
+	 * @return newly created {@link Category} object
+	 */
+	private static Category buildQueries() {
+
+		List<Question> questions = new ArrayList<Question>();
+
+		questions.add(queryOne());
+		questions.add(queryTwo());
+		questions.add(queryThree());
+		questions.add(queryFour());
+		questions.add(queryFive());
+
+		if (questions.isEmpty()) {
+			Logger.debug("Question list is empty!");
+			return null;
+		}
+
+		Logger.info("Question list created with " + questions.size()
+				+ " questions!");
+		return createCategory(questions, "Europe", "Austria");
+	}
+
+	/**
+	 * Creates a new {@link Category} object. Sets its name and questions.
+	 * Relates also the questions to this category.
+	 * 
+	 * @param questions
+	 *            a list of {@link Question} object, which belongs to this
+	 *            category
+	 * @param strings
+	 *            name of newly created category. If there is more then one,
+	 *            they will be separated by '/'.
+	 * @return newly created {@link Category} object
+	 */
+	private static Category createCategory(List<Question> questions,
+			String... strings) {
+
+		Category category = new Category();
+
+		StringBuilder nameEN = new StringBuilder();
+		StringBuilder nameDE = new StringBuilder();
+
+		for (int i = 0; i < strings.length; i++) {
+
+			Resource tmp = getResourceFor(strings[i]);
+			Text text = getTextFor(tmp);
+			nameEN.append(text.getEnText() + " / ");
+			nameDE.append(text.getDeText() + " / ");
+		}
+
+		category.setNameEN(nameEN.substring(0, nameEN.length() - 3));
+		category.setNameDE(nameDE.substring(0, nameDE.length() - 3));
+		category.setQuestions(questions);
+
+		for (Question q : questions)
+			q.setCategory(category);
+
+		Logger.info("Category " + category.getNameEN() + " created!");
+		return category;
+	}
+
+	/**
+	 * Creates a new {@link Question} object. Sets its texts, maximum time and
+	 * choice list, that belongs to this question. Relates also the questions in
+	 * list to newly created question.
 	 * 
 	 * @param maxtime
-	 *            maximum time
-	 * @param textEN
-	 *            English text
-	 * @param textDE
-	 *            German text
-	 * @return created {@link Question} itself
+	 *            maximum time for the question
+	 * @param text
+	 *            {@link Text} object which contains English and German text
+	 * @param choices
+	 *            a list of {@link Choice} objects, that belongs to this
+	 *            Question
+	 * @return newly created {@link Question} object
 	 */
-	private static Question createQuestion(BigDecimal maxtime) {
+	private static Question createQuestion(BigDecimal maxtime, Text text,
+			List<Choice> choices) {
 
 		Question question = new Question();
 		question.setMaxTime(maxtime);
+		question.setTextEN(text.getEnText());
+		question.setTextDE(text.getDeText());
+		question.setChoices(choices);
+
+		for (Choice c : choices)
+			c.setQuestion(question);
+
+		Logger.info("Question created!");
 
 		return question;
 	}
 
 	/**
-	 * Creates {@link Choice}s, packs them into an {@link ArrayList} and returns
-	 * it.
+	 * Creates a list of newly created {@link Choice} objects. Shuffles the list
+	 * and returns it.
 	 * 
-	 * @param question
-	 *            for which the {@link Choice}s belong
-	 * @param trueENTextList
-	 *            list of English texts for correct answers
-	 * @param trueDETextList
-	 *            list of German texts for correct answers
-	 * @param falseENTextList
-	 *            list of English texts for wrong answers
-	 * @param falseDETextList
-	 *            list of German texts for wrong answers
-	 * @return created {@link ArrayList}
+	 * @param trueTextList
+	 *            a list of {@link Text} objects for correct choices.
+	 * @param falseTextList
+	 *            a list of {@link Text} objects for wrong choices.
+	 * @return newly created and shuffled list
 	 */
-	private static void createChoiceList(Question question,
-			List<Text> trueTextList, List<Text> falseTextList) {
+	private static List<Choice> createChoiceList(List<Text> trueTextList,
+			List<Text> falseTextList) {
 
 		List<Choice> choiceList = new ArrayList<Choice>();
-		int sizeTrue = trueTextList.size();
 
-		for (int i = 0; i < sizeTrue; i++) {
+		for (Text text : trueTextList)
+			choiceList.add(createChoice(text, true));
 
-			Choice choice = createChoice(question, trueTextList.get(i), true);
-			choiceList.add(choice);
-		}
+		for (Text text : falseTextList)
+			choiceList.add(createChoice(text, false));
 
-		int sizeFalse = falseTextList.size();
-
-		for (int i = 0; i < sizeFalse; i++) {
-
-			Choice choice = createChoice(question, falseTextList.get(i), false);
-			choiceList.add(choice);
-		}
-
+		Logger.info("Choice list created with " + choiceList.size()
+				+ " choices!");
 		Collections.shuffle(choiceList);
-		question.setChoices(choiceList);
+		return choiceList;
 	}
 
 	/**
-	 * Creates a {@link Choice}, sets its {@link Question}, English and German
-	 * text of it and if it's the correct answer and returns it.
+	 * Creates a new {@link Choice} object. Sets its text and if it's correct
+	 * answer.
 	 * 
-	 * @param question
-	 *            to which the {@link Choice} belongs
-	 * @param textEN
-	 *            English text
-	 * @param textDE
-	 *            German text
+	 * @param text
+	 *            {@link Text} object which contains English and German texts
 	 * @param correctAnswer
-	 *            if it's the correct answer
-	 * @return created {@link Choice} itself
+	 *            true if Choice is correct, false otherwise
+	 * @return newly created {@link Choice} object
 	 */
-	private static Choice createChoice(Question question, Text text,
-			boolean correctAnswer) {
+	private static Choice createChoice(Text text, boolean correctAnswer) {
 
 		Choice choice = new Choice();
-		choice.setQuestion(question);
 		choice.setTextEN(text.getEnText());
 		choice.setTextDE(text.getDeText());
 		choice.setCorrectAnswer(correctAnswer);
 		return choice;
 	}
 
-	private static Question questionOne() {
+	/**
+	 * Creates a query to request data from {@link DBPedia}, which will return 4
+	 * correct and 4 wrong answers.
+	 * 
+	 * Query: Cities in Austria and not in Germany.
+	 * 
+	 * @return newly created Question related the query
+	 */
+	private static Question queryOne() {
 
-		Question question = createQuestion(BigDecimal.valueOf(30));
-
-		queryOne(question);
-
-		return question;
-	}
-
-	private static void queryOne(Question question) {
+		Logger.info("Query 1 start!");
 
 		Resource austria = getResourceFor("Austria");
 		Resource germany = getResourceFor("Germany");
-		
-		String questionTextEn = "Which Cities are located in " + getTextFor(austria).getEnText() +"?";
-		String questionTextDe = "Welche Staetde befinden sich in " + getTextFor(austria).getDeText() + "?";
-		
-		question.setTextEN(questionTextEn);
-		question.setTextDE(questionTextDe);
 
 		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
 				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.City)
@@ -202,27 +226,37 @@ public class DBPediaDataInserter {
 		List<Text> citiesInAustriaTexts = getTextsFor(citiesInAustria);
 		List<Text> citiesInGermanyTexts = getTextsFor(citiesInGermany);
 
-		createChoiceList(question, citiesInAustriaTexts, citiesInGermanyTexts);
+		List<Choice> choices = createChoiceList(citiesInAustriaTexts,
+				citiesInGermanyTexts);
+
+		if (choices.isEmpty()) {
+			Logger.debug("Choice list is empty!");
+			return null;
+		}
+
+		Text questionText = new Text();
+
+		questionText.setEnText("Which Cities are located in "
+				+ getTextFor(austria).getEnText() + "?");
+		questionText.setDeText("Welche Staetde befinden sich in "
+				+ getTextFor(austria).getDeText() + "?");
+
+		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
-	
-	private static Question questionTwo() {
 
-		Question question = createQuestion(BigDecimal.valueOf(40));
+	/**
+	 * Creates a query to request data from {@link DBPedia}, which will return 4
+	 * correct and 4 wrong answers.
+	 * 
+	 * Query: Countries, which uses euro as currency.
+	 * 
+	 * @return newly created Question related the query
+	 */
+	private static Question queryTwo() {
 
-		queryTwo(question);
-
-		return question;
-	}
-	
-	private static void queryTwo(Question question) {
+		Logger.info("Query 2 start!");
 
 		Resource euro = getResourceFor("Euro");
-		
-		String questionTextEn = "Which Countries are using " + getTextFor(euro).getEnText() +" as currency?";
-		String questionTextDe = "Welche Laender verwenden die Waehrung " + getTextFor(euro).getDeText() + "?";
-		
-		question.setTextEN(questionTextEn);
-		question.setTextDE(questionTextDe);
 
 		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
 				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.Country)
@@ -241,28 +275,38 @@ public class DBPediaDataInserter {
 		List<Text> countriesUsingEuroTexts = getTextsFor(countriesUsingEuro);
 		List<Text> countriesNotUsingEuroTexts = getTextsFor(countriesNotUsingEuro);
 
-		createChoiceList(question, countriesUsingEuroTexts, countriesNotUsingEuroTexts);
+		List<Choice> choices = createChoiceList(countriesUsingEuroTexts,
+				countriesNotUsingEuroTexts);
+
+		if (choices.isEmpty()) {
+			Logger.debug("Choice list is empty!");
+			return null;
+		}
+
+		Text questionText = new Text();
+
+		questionText.setEnText("Which Countries are using "
+				+ getTextFor(euro).getEnText() + " as currency?");
+		questionText.setDeText("Welche Laender verwenden die Waehrung "
+				+ getTextFor(euro).getDeText() + "?");
+
+		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
-	
-	private static Question questionThree() {
 
-		Question question = createQuestion(BigDecimal.valueOf(40));
+	/**
+	 * Creates a query to request data from {@link DBPedia}, which will return 4
+	 * correct and 4 wrong answers.
+	 * 
+	 * Query: Rivers passing through Austria and not through Germany.
+	 * 
+	 * @return newly created Question related the query
+	 */
+	private static Question queryThree() {
 
-		queryThree(question);
-
-		return question;
-	}
-	
-	private static void queryThree(Question question) {
+		Logger.info("Query 3 start!");
 
 		Resource austria = getResourceFor("Austria");
 		Resource germany = getResourceFor("Germany");
-		
-		String questionTextEn = "Which rivers pass through " + getTextFor(austria).getEnText() +"?";
-		String questionTextDe = "Welche Fluesse fliessen durch " + getTextFor(austria).getDeText() + "?";
-		
-		question.setTextEN(questionTextEn);
-		question.setTextDE(questionTextDe);
 
 		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
 				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.River)
@@ -281,28 +325,38 @@ public class DBPediaDataInserter {
 		List<Text> riversThroughAustriaTexts = getTextsFor(riversThroughAustria);
 		List<Text> riversThroughGermanyTexts = getTextsFor(riversThroughGermany);
 
-		createChoiceList(question, riversThroughAustriaTexts, riversThroughGermanyTexts);
+		List<Choice> choices = createChoiceList(riversThroughAustriaTexts,
+				riversThroughGermanyTexts);
+
+		if (choices.isEmpty()) {
+			Logger.debug("Choice list is empty!");
+			return null;
+		}
+
+		Text questionText = new Text();
+
+		questionText.setEnText("Which rivers pass through "
+				+ getTextFor(austria).getEnText() + "?");
+		questionText.setDeText("Welche Fluesse fliessen durch "
+				+ getTextFor(austria).getDeText() + "?");
+
+		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
-	
-	private static Question questionFour() {
 
-		Question question = createQuestion(BigDecimal.valueOf(35));
+	/**
+	 * Creates a query to request data from {@link DBPedia}, which will return 4
+	 * correct and 4 wrong answers.
+	 * 
+	 * Query: Lakes in Austria and not in Switzerland.
+	 * 
+	 * @return newly created Question related the query
+	 */
+	private static Question queryFour() {
 
-		queryFour(question);
-
-		return question;
-	}
-	
-	private static void queryFour(Question question) {
+		Logger.info("Query 4 start!");
 
 		Resource austria = getResourceFor("Austria");
 		Resource switzerland = getResourceFor("Switzerland");
-		
-		String questionTextEn = "Which lakes are located in " + getTextFor(austria).getEnText() +"?";
-		String questionTextDe = "Welche Seen sind in " + getTextFor(austria).getDeText() + "?";
-		
-		question.setTextEN(questionTextEn);
-		question.setTextDE(questionTextDe);
 
 		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
 				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.Lake)
@@ -321,28 +375,38 @@ public class DBPediaDataInserter {
 		List<Text> lakesInAustriaTexts = getTextsFor(lakesInAustria);
 		List<Text> lakesInSwitzerlandTexts = getTextsFor(lakesInSwitzerland);
 
-		createChoiceList(question, lakesInAustriaTexts, lakesInSwitzerlandTexts);
+		List<Choice> choices = createChoiceList(lakesInAustriaTexts,
+				lakesInSwitzerlandTexts);
+
+		if (choices.isEmpty()) {
+			Logger.debug("Choice list is empty!");
+			return null;
+		}
+
+		Text questionText = new Text();
+
+		questionText.setEnText("Which lakes are located in "
+				+ getTextFor(austria).getEnText() + "?");
+		questionText.setDeText("Welche Seen sind in "
+				+ getTextFor(austria).getDeText() + "?");
+
+		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
-	
-	private static Question questionFive() {
 
-		Question question = createQuestion(BigDecimal.valueOf(50));
+	/**
+	 * Creates a query to request data from {@link DBPedia}, which will return 4
+	 * correct and 4 wrong answers.
+	 * 
+	 * Query: Rivers sources at Austria and not in Switzerland.
+	 * 
+	 * @return newly created Question related the query
+	 */
+	private static Question queryFive() {
 
-		queryFive(question);
-
-		return question;
-	}
-	
-	private static void queryFive(Question question) {
+		Logger.info("Query 5 start!");
 
 		Resource austria = getResourceFor("Austria");
 		Resource switzerland = getResourceFor("Switzerland");
-		
-		String questionTextEn = "Which rivers sourced at " + getTextFor(austria).getEnText() +"?";
-		String questionTextDe = "Welche Fluesse stammen aus " + getTextFor(austria).getDeText() + "?";
-		
-		question.setTextEN(questionTextEn);
-		question.setTextDE(questionTextDe);
 
 		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
 				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.River)
@@ -361,16 +425,30 @@ public class DBPediaDataInserter {
 		List<Text> riversFromAustriaTexts = getTextsFor(riversFromAustria);
 		List<Text> riversFromSwitzerlandTexts = getTextsFor(riversFromswitzerland);
 
-		createChoiceList(question, riversFromAustriaTexts, riversFromSwitzerlandTexts);
+		List<Choice> choices = createChoiceList(riversFromAustriaTexts,
+				riversFromSwitzerlandTexts);
+
+		if (choices.isEmpty()) {
+			Logger.debug("Choice list is empty!");
+			return null;
+		}
+
+		Text questionText = new Text();
+
+		questionText.setEnText("Which rivers sourced at "
+				+ getTextFor(austria).getEnText() + "?");
+		questionText.setDeText("Welche Fluesse stammen aus "
+				+ getTextFor(austria).getDeText() + "?");
+
+		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
 
 	/**
-	 * Checks if {@link DBPedia} is available.
+	 * Checks if {@link DBPediaService} is available.
 	 * 
 	 * @return true if available, false otherwise
 	 */
 	private static boolean isAvailable() {
-
 		return DBPediaService.isAvailable();
 	}
 
@@ -380,11 +458,11 @@ public class DBPediaDataInserter {
 	 * 
 	 * @param resourceString
 	 *            String for the {@link Resource}
-	 * @return created {@link Resource}
+	 * @return retrieved {@link Resource}
 	 */
 	private static Resource getResourceFor(String resourceString) {
-
-		return DBPediaService.loadStatements(DBPedia.createResource(resourceString));
+		return DBPediaService.loadStatements(DBPedia
+				.createResource(resourceString));
 	}
 
 	/**
@@ -394,19 +472,18 @@ public class DBPediaDataInserter {
 	 * @param sqb
 	 *            {@link SelectQueryBuilder} from which the {@link Model}
 	 *            created
-	 * @return created {@link Model}
+	 * @return retrieved {@link Model}
 	 */
 	private static Model getModelFor(SelectQueryBuilder sqb) {
-
 		return DBPediaService.loadStatements(sqb.toQueryString());
 	}
 
 	/**
-	 * Gets the English name of the given {@link Resource} and returns it.
+	 * Gets English and German text of given {@link Resource}.
 	 * 
 	 * @param resource
-	 *            name requested from
-	 * @return name of the {@link Resource}
+	 *            {@link Resource} from which texts should be retrieved
+	 * @return created {@link Text} object
 	 */
 	private static Text getTextFor(Resource resource) {
 
@@ -417,10 +494,19 @@ public class DBPediaDataInserter {
 		return text;
 	}
 
+	/**
+	 * Gets English and German texts for given {@link Model}, creates
+	 * {@link Text} object and packs them in a list.
+	 * 
+	 * @param model
+	 *            {@link Model} from which the texts should be retrieved
+	 * @return newly created list of texts
+	 */
 	private static List<Text> getTextsFor(Model model) {
 
 		List<Text> texts = new ArrayList<Text>();
-		List<String> en = DBPediaService.getResourceNames(model, Locale.ENGLISH);
+		List<String> en = DBPediaService
+				.getResourceNames(model, Locale.ENGLISH);
 		List<String> de = DBPediaService.getResourceNames(model, Locale.GERMAN);
 
 		for (int i = 0; i < en.size(); i++)
@@ -429,6 +515,12 @@ public class DBPediaDataInserter {
 		return texts;
 	}
 
+	/**
+	 * Helper class, which contains only English and German Strings.
+	 * 
+	 * @author lwnt
+	 * 
+	 */
 	private static class Text {
 
 		private String enText;
@@ -461,6 +553,5 @@ public class DBPediaDataInserter {
 		public void setDeText(String deText) {
 			this.deText = deText;
 		}
-
 	}
 }

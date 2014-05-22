@@ -6,7 +6,10 @@ import static java.lang.Math.round;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+
+import models.QuizUser.Gender;
 
 public class QuizGame {
 	private static int NUM_ROUNDS = 5;
@@ -58,13 +61,17 @@ public class QuizGame {
 
 	private QuizUser createHumanPlayer() {
 		QuizUser user = new QuizUser();
-		user.setName("Spieler 1");
+		user.setName("Human");
 		return user;
 	}
 
 	private QuizUser createComputerPlayer() {
 		QuizUser user = new QuizUser();
-		user.setName("Spieler 2");
+		user.setFirstName("Com");
+		user.setLastName("Puter");
+		user.setBirthDate(new Date());
+		user.setGender(Gender.female);
+		user.setName("Computer");
 		return user;
 	}
 
@@ -79,8 +86,9 @@ public class QuizGame {
 	public void startNewRound() {
 		Category category = chooseCategory();
 
-        //Category might not be attached to Peristence Context any more - reattach if necessary
-        category = QuizDAO.INSTANCE.merge(category);
+		// Category might not be attached to Peristence Context any more -
+		// reattach if necessary
+		category = QuizDAO.INSTANCE.merge(category);
 
 		List<Question> questions = chooseQuestions(category);
 		Round round = new Round();
@@ -169,7 +177,8 @@ public class QuizGame {
 	public int getWonRounds(QuizUser player) {
 		int counter = 0;
 		for (Round round : rounds) {
-			if (round.getRoundWinner() != null && round.getRoundWinner().equals(player)) {
+			if (round.getRoundWinner() != null
+					&& round.getRoundWinner().equals(player)) {
 				counter++;
 			}
 		}
@@ -185,10 +194,11 @@ public class QuizGame {
 				int count = 0;
 				for (Round round : rounds) {
 					// added missing null check
-					if (round.getRoundWinner() != null && round.getRoundWinner().equals(player))
+					if (round.getRoundWinner() != null
+							&& round.getRoundWinner().equals(player))
 						count++;
 				}
-				
+
 				if (count > bestCount) {
 					bestUsers.clear();
 					bestUsers.add(player);
