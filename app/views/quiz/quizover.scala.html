@@ -1,4 +1,4 @@
-@(game: QuizGame)
+@(game: QuizGame, uuid: String)
 @player1 = @{ game.getPlayers().get(0) }
 @player2 = @{ game.getPlayers().get(1) }
 @winnerMessage = @{
@@ -15,6 +15,10 @@
             <section id="roundwinner" aria-labelledby="roundwinnerheading">
                 <h2 id="roundwinnerheading" class="accessibility">@Messages("quiz.result")</h2>
                 <p class="roundwinnermessage">@winnerMessage</p>
+            	
+            	@if(flash.contains("twitter.successful")) {
+		    		<p>@Messages(flash.get("twitter.successful"), uuid)</p>
+		    	}
             </section>
         
             <!-- round info -->    

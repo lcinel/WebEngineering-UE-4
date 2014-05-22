@@ -55,3 +55,5 @@ quiz.no-current-question=Es gibt gerade keine Frage.
 quiz.no-round-result=Es gibt gerade kein Rundenresultat.
 quiz.no-end-result=Es gibt gerade kein Quizresultat.
 quiz.no-round-ended=Es gibt gerade keine beendete Runde.
+
+uuid.sent=UUID {0} wurde auf Twitter veröffentlicht.

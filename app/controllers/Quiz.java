@@ -3,6 +3,7 @@ package controllers;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import scala.Option;
+import twitter.ITwitterClient;
+import twitter.TwitterClientImpl;
+import twitter.TwitterStatusMessage;
 import views.html.quiz.index;
 import views.html.quiz.quiz;
 import views.html.quiz.quizover;
@@ -184,8 +188,25 @@ public class Quiz extends Controller {
 	public static Result endResult() {
 		QuizGame game = cachedGame();
 		if (game != null && isGameOver(game)) {
-			createSoapRequest(game);
-			return ok(quizover.render(game));
+			
+			String uuid = createSoapRequest(game);
+			
+			if(uuid != null){
+				
+				String userName = user().getUserName();
+				TwitterStatusMessage twitterMsg = new TwitterStatusMessage(userName, uuid, new Date());
+				ITwitterClient twitterClient = new TwitterClientImpl();
+				
+				try {
+					
+					twitterClient.publishUuid(twitterMsg);
+					flash("twitter.successful", "uuid.sent");
+				} catch (Exception e) {
+					Logger.error("Could not send/receive data to/from Twitter!");
+				}
+			}
+			
+			return ok(quizover.render(game, uuid));
 		} else {
 			return badRequest(Messages.get("quiz.no-end-result"));
 		}
@@ -228,7 +249,7 @@ public class Quiz extends Controller {
 		return Play.application().getWrappedApplication();
 	}
 
-	private static void createSoapRequest(QuizGame game) {
+	private static String createSoapRequest(QuizGame game) {
 
 		try {
 
@@ -328,30 +349,31 @@ public class Quiz extends Controller {
 
 			Logger.info("SOAP-Request created!");
 
-			getSoapResponse(message, endpoint);
+			return getSoapResponse(message, endpoint);
 
 		} catch (Exception e) {
 
 			Logger.error(e.getMessage(), e);
+			return null;
 		}
 	}
 
-	private static void getSoapResponse(SOAPMessage message, URL endpoint) {
+	private static String getSoapResponse(SOAPMessage message, URL endpoint) {
 
 		try {
 
+			String uuid;
+			
 			SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory
 					.newInstance();
 			SOAPConnection soapConnection = soapConnectionFactory
 					.createConnection();
 
-			Logger.info("SOAP-Request sending!");
+			Logger.info("SOAP-Request: Sending!");
 			SOAPMessage response = soapConnection.call(message, endpoint);
-
-			Logger.info("SOAP-Response received!");
+			Logger.info("SOAP-Response: Received!");
 
 			SOAPBody body = response.getSOAPBody();
-
 			if (body.hasFault()) {
 
 				Logger.info("SOAP-Response contains failure!");
@@ -365,26 +387,27 @@ public class Quiz extends Controller {
 						+ code.getQualifiedName() + "\n\tFault string: "
 						+ string + "\n\tFault actor: " + actor);
 
-				return;
+				return null;
 			}
 
 			@SuppressWarnings("rawtypes")
 			Iterator iterator = body.getChildElements();
-
-			if (iterator.hasNext()) {
-
-				SOAPBodyElement uuidElement = (SOAPBodyElement) iterator.next();
-				String uuid = uuidElement.getValue();
-
-				Logger.info("UUID caught: " + uuid);
-			} else {
-
+			if (!iterator.hasNext()) {
 				Logger.error("SOAP-Response has no child elements!");
+				return null;
 			}
+			
+			SOAPBodyElement uuidElement = (SOAPBodyElement) iterator.next();
+			uuid = uuidElement.getValue();
+
+			Logger.info("UUID caught: " + uuid);
+			
+			return uuid;
 
 		} catch (Exception e) {
 
 			Logger.error(e.getMessage(), e);
+			return null;
 		}
 	}
 }
