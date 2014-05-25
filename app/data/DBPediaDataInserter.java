@@ -44,6 +44,7 @@ public class DBPediaDataInserter {
 
 		if (category == null) {
 			Logger.debug("Category is null");
+			Logger.info("Could not retrieve data from DBPedia!");
 			return;
 		}
 
@@ -62,11 +63,26 @@ public class DBPediaDataInserter {
 
 		List<Question> questions = new ArrayList<Question>();
 
-		questions.add(queryOne());
-		questions.add(queryTwo());
-		questions.add(queryThree());
-		questions.add(queryFour());
-		questions.add(queryFive());
+		Question q = null;
+		q = queryOne();
+		if (q != null)
+			questions.add(q);
+
+		q = queryTwo();
+		if (q != null)
+			questions.add(q);
+
+		q = queryThree();
+		if (q != null)
+			questions.add(q);
+
+		q = queryFour();
+		if (q != null)
+			questions.add(q);
+
+		q = queryFive();
+		if (q != null)
+			questions.add(q);
 
 		if (questions.isEmpty()) {
 			Logger.debug("Question list is empty!");
@@ -206,42 +222,44 @@ public class DBPediaDataInserter {
 
 		Logger.info("Query 1 start!");
 
-		Resource austria = getResourceFor("Austria");
-		Resource germany = getResourceFor("Germany");
+		try {
+			
+			Resource austria = getResourceFor("Austria");
+			Resource germany = getResourceFor("Germany");
 
-		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
-				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.City)
-				.addPredicateExistsClause(FOAF.name)
-				.addWhereClause(DBPediaOWL.country, austria)
-				.addFilterClause(RDFS.label, Locale.ENGLISH)
-				.addFilterClause(RDFS.label, Locale.GERMAN);
+			SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
+					.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.City)
+					.addPredicateExistsClause(FOAF.name)
+					.addWhereClause(DBPediaOWL.country, austria)
+					.addFilterClause(RDFS.label, Locale.ENGLISH)
+					.addFilterClause(RDFS.label, Locale.GERMAN);
 
-		Model citiesInAustria = getModelFor(sqb);
+			Model citiesInAustria = getModelFor(sqb);
 
-		sqb.removeWhereClause(DBPediaOWL.country, austria);
-		sqb.addWhereClause(DBPediaOWL.country, germany);
+			sqb.removeWhereClause(DBPediaOWL.country, austria);
+			sqb.addWhereClause(DBPediaOWL.country, germany);
 
-		Model citiesInGermany = getModelFor(sqb);
+			Model citiesInGermany = getModelFor(sqb);
 
-		List<Text> citiesInAustriaTexts = getTextsFor(citiesInAustria);
-		List<Text> citiesInGermanyTexts = getTextsFor(citiesInGermany);
+			List<Text> citiesInAustriaTexts = getTextsFor(citiesInAustria);
+			List<Text> citiesInGermanyTexts = getTextsFor(citiesInGermany);
 
-		List<Choice> choices = createChoiceList(citiesInAustriaTexts,
-				citiesInGermanyTexts);
+			List<Choice> choices = createChoiceList(citiesInAustriaTexts,
+					citiesInGermanyTexts);
 
-		if (choices.isEmpty()) {
-			Logger.debug("Choice list is empty!");
+			Text questionText = new Text();
+
+			questionText.setEnText("Which Cities are located in "
+					+ getTextFor(austria).getEnText() + "?");
+			questionText.setDeText("Welche Staetde befinden sich in "
+					+ getTextFor(austria).getDeText() + "?");
+
+			return createQuestion(BigDecimal.valueOf(30), questionText, choices);
+
+		} catch (Exception e) {
+			Logger.debug("DBPedia Server Exception!");
 			return null;
 		}
-
-		Text questionText = new Text();
-
-		questionText.setEnText("Which Cities are located in "
-				+ getTextFor(austria).getEnText() + "?");
-		questionText.setDeText("Welche Staetde befinden sich in "
-				+ getTextFor(austria).getDeText() + "?");
-
-		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
 
 	/**
@@ -255,42 +273,49 @@ public class DBPediaDataInserter {
 	private static Question queryTwo() {
 
 		Logger.info("Query 2 start!");
+		
+		try {
+			
+			Resource euro = getResourceFor("Euro");
 
-		Resource euro = getResourceFor("Euro");
+			SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
+					.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.Country)
+					.addPredicateExistsClause(FOAF.name)
+					.addWhereClause(DBPediaOWL.currency, euro)
+					.addFilterClause(RDFS.label, Locale.ENGLISH)
+					.addFilterClause(RDFS.label, Locale.GERMAN);
 
-		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
-				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.Country)
-				.addPredicateExistsClause(FOAF.name)
-				.addWhereClause(DBPediaOWL.currency, euro)
-				.addFilterClause(RDFS.label, Locale.ENGLISH)
-				.addFilterClause(RDFS.label, Locale.GERMAN);
+			Model countriesUsingEuro = getModelFor(sqb);
 
-		Model countriesUsingEuro = getModelFor(sqb);
+			sqb.removeWhereClause(DBPediaOWL.currency, euro);
+			sqb.addMinusClause(DBPediaOWL.currency, euro);
 
-		sqb.removeWhereClause(DBPediaOWL.currency, euro);
-		sqb.addMinusClause(DBPediaOWL.currency, euro);
+			Model countriesNotUsingEuro = getModelFor(sqb);
 
-		Model countriesNotUsingEuro = getModelFor(sqb);
+			List<Text> countriesUsingEuroTexts = getTextsFor(countriesUsingEuro);
+			List<Text> countriesNotUsingEuroTexts = getTextsFor(countriesNotUsingEuro);
 
-		List<Text> countriesUsingEuroTexts = getTextsFor(countriesUsingEuro);
-		List<Text> countriesNotUsingEuroTexts = getTextsFor(countriesNotUsingEuro);
+			List<Choice> choices = createChoiceList(countriesUsingEuroTexts,
+					countriesNotUsingEuroTexts);
 
-		List<Choice> choices = createChoiceList(countriesUsingEuroTexts,
-				countriesNotUsingEuroTexts);
+			if (choices.isEmpty()) {
+				Logger.debug("Choice list is empty!");
+				return null;
+			}
 
-		if (choices.isEmpty()) {
-			Logger.debug("Choice list is empty!");
+			Text questionText = new Text();
+
+			questionText.setEnText("Which Countries are using "
+					+ getTextFor(euro).getEnText() + " as currency?");
+			questionText.setDeText("Welche Laender verwenden die Waehrung "
+					+ getTextFor(euro).getDeText() + "?");
+
+			return createQuestion(BigDecimal.valueOf(30), questionText, choices);
+			
+		} catch (Exception e) {
+			Logger.debug("DBPedia Server Exception!");
 			return null;
 		}
-
-		Text questionText = new Text();
-
-		questionText.setEnText("Which Countries are using "
-				+ getTextFor(euro).getEnText() + " as currency?");
-		questionText.setDeText("Welche Laender verwenden die Waehrung "
-				+ getTextFor(euro).getDeText() + "?");
-
-		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
 
 	/**
@@ -304,43 +329,50 @@ public class DBPediaDataInserter {
 	private static Question queryThree() {
 
 		Logger.info("Query 3 start!");
+		
+		try {
+			
+			Resource austria = getResourceFor("Austria");
+			Resource germany = getResourceFor("Germany");
 
-		Resource austria = getResourceFor("Austria");
-		Resource germany = getResourceFor("Germany");
+			SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
+					.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.River)
+					.addPredicateExistsClause(FOAF.name)
+					.addWhereClause(DBPediaOWL.country, austria)
+					.addFilterClause(RDFS.label, Locale.ENGLISH)
+					.addFilterClause(RDFS.label, Locale.GERMAN);
 
-		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
-				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.River)
-				.addPredicateExistsClause(FOAF.name)
-				.addWhereClause(DBPediaOWL.country, austria)
-				.addFilterClause(RDFS.label, Locale.ENGLISH)
-				.addFilterClause(RDFS.label, Locale.GERMAN);
+			Model riversThroughAustria = getModelFor(sqb);
 
-		Model riversThroughAustria = getModelFor(sqb);
+			sqb.removeWhereClause(DBPediaOWL.country, austria);
+			sqb.addWhereClause(DBPediaOWL.country, germany);
 
-		sqb.removeWhereClause(DBPediaOWL.country, austria);
-		sqb.addWhereClause(DBPediaOWL.country, germany);
+			Model riversThroughGermany = getModelFor(sqb);
 
-		Model riversThroughGermany = getModelFor(sqb);
+			List<Text> riversThroughAustriaTexts = getTextsFor(riversThroughAustria);
+			List<Text> riversThroughGermanyTexts = getTextsFor(riversThroughGermany);
 
-		List<Text> riversThroughAustriaTexts = getTextsFor(riversThroughAustria);
-		List<Text> riversThroughGermanyTexts = getTextsFor(riversThroughGermany);
+			List<Choice> choices = createChoiceList(riversThroughAustriaTexts,
+					riversThroughGermanyTexts);
 
-		List<Choice> choices = createChoiceList(riversThroughAustriaTexts,
-				riversThroughGermanyTexts);
+			if (choices.isEmpty()) {
+				Logger.debug("Choice list is empty!");
+				return null;
+			}
 
-		if (choices.isEmpty()) {
-			Logger.debug("Choice list is empty!");
+			Text questionText = new Text();
+
+			questionText.setEnText("Which rivers pass through "
+					+ getTextFor(austria).getEnText() + "?");
+			questionText.setDeText("Welche Fluesse fliessen durch "
+					+ getTextFor(austria).getDeText() + "?");
+
+			return createQuestion(BigDecimal.valueOf(30), questionText, choices);
+			
+		} catch (Exception e) {
+			Logger.debug("DBPedia Server Exception!");
 			return null;
 		}
-
-		Text questionText = new Text();
-
-		questionText.setEnText("Which rivers pass through "
-				+ getTextFor(austria).getEnText() + "?");
-		questionText.setDeText("Welche Fluesse fliessen durch "
-				+ getTextFor(austria).getDeText() + "?");
-
-		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
 
 	/**
@@ -354,43 +386,50 @@ public class DBPediaDataInserter {
 	private static Question queryFour() {
 
 		Logger.info("Query 4 start!");
+		
+		try {
+			
+			Resource austria = getResourceFor("Austria");
+			Resource switzerland = getResourceFor("Switzerland");
 
-		Resource austria = getResourceFor("Austria");
-		Resource switzerland = getResourceFor("Switzerland");
+			SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
+					.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.Lake)
+					.addPredicateExistsClause(FOAF.name)
+					.addWhereClause(DBPediaOWL.country, austria)
+					.addFilterClause(RDFS.label, Locale.ENGLISH)
+					.addFilterClause(RDFS.label, Locale.GERMAN);
 
-		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
-				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.Lake)
-				.addPredicateExistsClause(FOAF.name)
-				.addWhereClause(DBPediaOWL.country, austria)
-				.addFilterClause(RDFS.label, Locale.ENGLISH)
-				.addFilterClause(RDFS.label, Locale.GERMAN);
+			Model lakesInAustria = getModelFor(sqb);
 
-		Model lakesInAustria = getModelFor(sqb);
+			sqb.removeWhereClause(DBPediaOWL.country, austria);
+			sqb.addWhereClause(DBPediaOWL.country, switzerland);
 
-		sqb.removeWhereClause(DBPediaOWL.country, austria);
-		sqb.addWhereClause(DBPediaOWL.country, switzerland);
+			Model lakesInSwitzerland = getModelFor(sqb);
 
-		Model lakesInSwitzerland = getModelFor(sqb);
+			List<Text> lakesInAustriaTexts = getTextsFor(lakesInAustria);
+			List<Text> lakesInSwitzerlandTexts = getTextsFor(lakesInSwitzerland);
 
-		List<Text> lakesInAustriaTexts = getTextsFor(lakesInAustria);
-		List<Text> lakesInSwitzerlandTexts = getTextsFor(lakesInSwitzerland);
+			List<Choice> choices = createChoiceList(lakesInAustriaTexts,
+					lakesInSwitzerlandTexts);
 
-		List<Choice> choices = createChoiceList(lakesInAustriaTexts,
-				lakesInSwitzerlandTexts);
+			if (choices.isEmpty()) {
+				Logger.debug("Choice list is empty!");
+				return null;
+			}
 
-		if (choices.isEmpty()) {
-			Logger.debug("Choice list is empty!");
+			Text questionText = new Text();
+
+			questionText.setEnText("Which lakes are located in "
+					+ getTextFor(austria).getEnText() + "?");
+			questionText.setDeText("Welche Seen sind in "
+					+ getTextFor(austria).getDeText() + "?");
+
+			return createQuestion(BigDecimal.valueOf(30), questionText, choices);
+			
+		} catch (Exception e) {
+			Logger.debug("DBPedia Server Exception!");
 			return null;
 		}
-
-		Text questionText = new Text();
-
-		questionText.setEnText("Which lakes are located in "
-				+ getTextFor(austria).getEnText() + "?");
-		questionText.setDeText("Welche Seen sind in "
-				+ getTextFor(austria).getDeText() + "?");
-
-		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
 
 	/**
@@ -405,42 +444,49 @@ public class DBPediaDataInserter {
 
 		Logger.info("Query 5 start!");
 
-		Resource austria = getResourceFor("Austria");
-		Resource switzerland = getResourceFor("Switzerland");
+		try {
+			
+			Resource austria = getResourceFor("Austria");
+			Resource switzerland = getResourceFor("Switzerland");
 
-		SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
-				.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.River)
-				.addPredicateExistsClause(FOAF.name)
-				.addWhereClause(DBPediaOWL.sourceCountry, austria)
-				.addFilterClause(RDFS.label, Locale.ENGLISH)
-				.addFilterClause(RDFS.label, Locale.GERMAN);
+			SelectQueryBuilder sqb = DBPediaService.createQueryBuilder()
+					.setLimit(4).addWhereClause(RDF.type, DBPediaOWL.River)
+					.addPredicateExistsClause(FOAF.name)
+					.addWhereClause(DBPediaOWL.sourceCountry, austria)
+					.addFilterClause(RDFS.label, Locale.ENGLISH)
+					.addFilterClause(RDFS.label, Locale.GERMAN);
 
-		Model riversFromAustria = getModelFor(sqb);
+			Model riversFromAustria = getModelFor(sqb);
 
-		sqb.removeWhereClause(DBPediaOWL.sourceCountry, austria);
-		sqb.addWhereClause(DBPediaOWL.sourceCountry, switzerland);
+			sqb.removeWhereClause(DBPediaOWL.sourceCountry, austria);
+			sqb.addWhereClause(DBPediaOWL.sourceCountry, switzerland);
 
-		Model riversFromswitzerland = getModelFor(sqb);
+			Model riversFromswitzerland = getModelFor(sqb);
 
-		List<Text> riversFromAustriaTexts = getTextsFor(riversFromAustria);
-		List<Text> riversFromSwitzerlandTexts = getTextsFor(riversFromswitzerland);
+			List<Text> riversFromAustriaTexts = getTextsFor(riversFromAustria);
+			List<Text> riversFromSwitzerlandTexts = getTextsFor(riversFromswitzerland);
 
-		List<Choice> choices = createChoiceList(riversFromAustriaTexts,
-				riversFromSwitzerlandTexts);
+			List<Choice> choices = createChoiceList(riversFromAustriaTexts,
+					riversFromSwitzerlandTexts);
 
-		if (choices.isEmpty()) {
-			Logger.debug("Choice list is empty!");
+			if (choices.isEmpty()) {
+				Logger.debug("Choice list is empty!");
+				return null;
+			}
+
+			Text questionText = new Text();
+
+			questionText.setEnText("Which rivers sourced at "
+					+ getTextFor(austria).getEnText() + "?");
+			questionText.setDeText("Welche Fluesse stammen aus "
+					+ getTextFor(austria).getDeText() + "?");
+
+			return createQuestion(BigDecimal.valueOf(30), questionText, choices);
+			
+		} catch (Exception e) {
+			Logger.debug("DBPedia Server Exception!");
 			return null;
 		}
-
-		Text questionText = new Text();
-
-		questionText.setEnText("Which rivers sourced at "
-				+ getTextFor(austria).getEnText() + "?");
-		questionText.setDeText("Welche Fluesse stammen aus "
-				+ getTextFor(austria).getDeText() + "?");
-
-		return createQuestion(BigDecimal.valueOf(30), questionText, choices);
 	}
 
 	/**
